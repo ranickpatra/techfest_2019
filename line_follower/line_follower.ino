@@ -1,8 +1,8 @@
 #include "car.h"
 #include "sensor.h"
 
-// comment if out if the line is not black
-#define BLACK_LINE
+// comment if out if the line is not WHITE
+//#define WHITE_LINE
 
 // create a car object
 CAR car;  // 0,1; 2,3, pwm 6; 5
@@ -18,7 +18,7 @@ void setup() {
   car.init(Motor(3,2,5), Motor(1,0,6)); // initilize the motor with wheel
   sensor.init();    // initilize the IR sensor
 
-  pid_pc = 1.0f;    // proportional constant
+  pid_pc = 20.0f;    // proportional constant
   pid_ic = 0;       // intregal constant
   pid_dc = 0.5f;    // derevative constant
   error = prev_error = 0;   // set initial error zero

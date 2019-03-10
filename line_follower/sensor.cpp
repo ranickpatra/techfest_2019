@@ -29,10 +29,13 @@ int* SENSOR::getInput() {
     inputArray[i] = digitalRead(pins[i]);
 
   // if the line is black then execute
-  #ifdef BLACK_LINE
-    for (int i = 0; i < 8; i++)
-      inputArray[i] = !inputArray[i];   // not operation to invert the value
-  #endif
+  // #ifdef WHITE_LINE
+  //   for (int i = 0; i < 8; i++)
+  //     inputArray[i] = !inputArray[i];   // not operation to invert the value
+  // #endif
 
+  for (int i = 0; i < 8; i++)
+      inputArray[i] = !inputArray[i];   // not operation to invert the value
+      
   return inputArray;  // return sensor data
 }
