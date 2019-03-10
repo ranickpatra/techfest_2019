@@ -23,10 +23,6 @@ int lst_action = FORWORD;
 // create a car object
 CAR car;  // 0,1; 2,3, pwm 6; 5
 SENSOR sensor(A0, A1, A2, A3, A4, A5, 13, 12);  // create a IR sensor class with sensor input pin from left to right
-int pid;  // pid variable
-float pid_p, pid_i, pid_d;  // proportional intregal and derevative variable
-float pid_pc, pid_ic, pid_dc; // pid constants
-int error, prev_error;  // error variables
 int *sensor_ip; // to store the sensor sensor data
 
 //int speed_factor[] = {0, 50, 150, 255};
@@ -34,7 +30,7 @@ int speed_factor[] = {255, 150, 50, 0};
 float multiplication_factor = 0;
 int max_speed = 200;
 uint8_t acute_detect;
-int rotatedelay = 150;
+int rotatedelay = 180;
 
 
 bool acute_detect_once;
@@ -44,12 +40,6 @@ void setup() {
 
   car.init(Motor(3,2,5), Motor(1,0,6)); // initilize the motor with wheel
   sensor.init();    // initilize the IR sensor
-
-  pid_pc = 20.0f;    // proportional constant
-  pid_ic = 0;       // intregal constant
-  pid_dc = 0.5f;    // derevative constant
-  error = prev_error = 0;   // set initial error zero
-
   multiplication_factor = ((float) max_speed) / 255;
   car.fwd(max_speed);
   delay(200);
@@ -59,33 +49,8 @@ void setup() {
 
 void loop() {
 
-  error = 0;      // set error = 0  for every loop
   sensor_ip = sensor.getInput();    // get data from the ir sensor
 
-  // read data from left 4 sensors
-  for (int i = 0; i < 4; i++) {
-    error = sensor_ip[i] * (i - 4);   // generate -ve error
-    // get max -ve error and break
-    if (error != 0)
-      break;
-  }
-
-  // read data from right 4 sensors
-  for (int i = 7; i > 3; i--) {
-    int _tmp = sensor_ip[i] * (i - 3);   // generate +ve error
-    // get max +ve error and break
-    if (_tmp != 0) {
-      error += _tmp;
-      break;
-    }
-  }
-
-  /****************   calculate pid   ***********************/
-  // pid_p = pid_pc * error;   // calculate proportional error
-  // pid_d = pid_dc * (error - prev_error);  // calculate deravative error
-  // pid = (int) (pid_p + pid_i + pid_d);    // calculate pid value
-  // prev_error = error;   // set error = previous error to use in next iteration
-  // pid = map(abs(pid), 0, 255, 150, 255);  // map the pid value to the analog output value to drive motor
 
   uint8_t array_sensor = 0;
 
@@ -161,13 +126,11 @@ void loop() {
       break;
 
     case B11100000: // turn left
-      //car.moveLeft_fwd(1000*multiplication_factor);
       car.turnLeft(SPEED_90_DEG);
       lst_action = ROTATE_LEFT;
       delay(rotatedelay);
       break;
     case B01110000: // turn left
-      //car.moveLeft_fwd(speed_factor[1]*multiplication_factor);
       car.turnLeft(SPEED_90_DEG);
       lst_action = ROTATE_LEFT;
       delay(rotatedelay);
@@ -181,13 +144,11 @@ void loop() {
       lst_action = RIGHT_TURN;
       break;
     case B00001110: // turn right
-      //car.moveRight_fwd(speed_factor[1]*multiplication_factor);
       car.turnRight(SPEED_90_DEG);
       lst_action = ROTATE_RIGHT;
       delay(rotatedelay);
       break;
     case B00000111: // turn right
-      //car.moveRight_fwd(1000*multiplication_factor);
       car.turnRight(SPEED_90_DEG);
       lst_action = ROTATE_RIGHT;
       delay(rotatedelay);
@@ -307,16 +268,6 @@ void loop() {
       lst_action = FORWORD;
 
   }
-
-
-
-  // if (error < 0) {
-  //   car.moveLeft_fwd(255, pid); // move left
-  // } else if (error > 0) {
-  //   car.moveRight_fwd(255, pid);  // move right
-  // } else {
-  //   car.fwd(255);   // move forword
-  // }
 
   delay(10);    // delay to derevative value work properly
 
