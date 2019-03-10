@@ -1,3 +1,3 @@
 Circuit diagram
 
-![alt text](images/schematic_01.png)
+![alt text](../images/schematic_01.png)
