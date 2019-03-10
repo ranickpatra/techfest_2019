@@ -2,12 +2,13 @@
 
 class CAR {
 private:
-  int speed = 150;
-  int rotate_speed = 150;
-  Motor motor_left, motor_right;
+  int speed = 150;    // set a default car speed
+  int rotate_speed = 150; // set a default car rotation speed
+  Motor motor_left, motor_right;    // motor variable
 public:
-  CAR();
-  void init(Motor, Motor);
+  
+  CAR();  // constructor of car
+  void init(Motor, Motor);  // to initilize the car
   void stop();
   void fwd();
   void fwd(int);

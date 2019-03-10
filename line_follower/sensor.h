@@ -5,11 +5,11 @@
 
 class SENSOR {
 private:
-  int pins[8];
-  int inputArray[8];
+  int pins[8];    // sensor pins array
+  int inputArray[8];  // input array
 
 public:
-  SENSOR(int,int,int,int,int,int,int,int);
+  SENSOR(int,int,int,int,int,int,int,int);  // constructor
   void init();
   int* getInput();
 
